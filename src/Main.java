@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class Main {
-    static final int sizeOfArray = 1_00_000;
+    static final int sizeOfArray = 20_000;
     public static void main(String[] args) {
         //bubble sort
         var startTime = System.nanoTime();
@@ -33,7 +33,14 @@ public class Main {
         startTime = System.nanoTime();
         nums = insertionSort(getUnsortedArray());
         totalTime = System.nanoTime() - startTime;
-        System.out.println(String.format("Num copyOperations for %s: %s, num comparisons %s, total time in nanoseconds %s","Selection Sort",nums.copyOps,nums.comparisons,totalTime));
+        System.out.println(String.format("Num copyOperations for %s: %s, num comparisons %s, total time in nanoseconds %s","insertion Sort",nums.copyOps,nums.comparisons,totalTime));
+
+        startTime = System.nanoTime();
+        HeapSort hs = new HeapSort();
+        hs.sort(getUnsortedArray());
+        totalTime = System.nanoTime() - startTime;
+        nums = hs.nums;
+        System.out.println(String.format("Num comparisons for %s: %s, num copies %s, num swaps : %s total time in nanoseconds %s","heap Sort",nums.comparisons,nums.copyOps,nums.swaps,totalTime));
 
     }
 
@@ -263,6 +270,62 @@ class QuickSort {
             // partition and after partition
             sort(arr, low, pi - 1);
             sort(arr, pi + 1, high);
+        }
+    }
+}
+
+// Java program for implementation of Heap Sort
+class HeapSort {
+    EfficiencyNumbers nums = new EfficiencyNumbers();
+    public void sort(int arr[]) {
+        int n = arr.length;
+
+        // Build heap (rearrange array)
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            nums.comparisons++;
+            heapify(arr, n, i);
+        }
+
+        // One by one extract an element from heap
+        for (int i = n - 1; i >= 0; i--) {
+            nums.comparisons++;
+            // Move current root to end
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+            nums.swaps++;
+            // call max heapify on the reduced heap
+            heapify(arr, i, 0);
+        }
+    }
+
+    // To heapify a subtree rooted with node i which is
+    // an index in arr[]. n is size of heap
+    void heapify(int arr[], int n, int i) {
+        int largest = i; // Initialize largest as root
+        int l = 2 * i + 1; // left = 2*i + 1
+        int r = 2 * i + 2; // right = 2*i + 2
+        nums.copyOps += 3;
+        // If left child is larger than root
+        nums.comparisons+=2;
+        if (l < n && arr[l] > arr[largest])
+            largest = l;
+
+        // If right child is larger than largest so far
+        nums.comparisons+=2;
+        if (r < n && arr[r] > arr[largest])
+            largest = r;
+
+        // If largest is not root
+        nums.comparisons++;
+        if (largest != i) {
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+            nums.swaps++;
+
+            // Recursively heapify the affected sub-tree
+            heapify(arr, n, largest);
         }
     }
 }
