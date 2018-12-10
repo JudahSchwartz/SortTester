@@ -8,187 +8,173 @@ public class Main {
 
     static final int NUM_ITERATIONS = 10;
 
-    static EfficiencyNumbers bubbleNumbers = new EfficiencyNumbers(),
-
-    selectionNumbers  = new EfficiencyNumbers()
-
-            ,mergeNumbers = new EfficiencyNumbers()
-
-            ,quickNumbers = new EfficiencyNumbers()
-
-            ,insertionNumbers = new EfficiencyNumbers()
-
-            ,heapNumbers = new EfficiencyNumbers()
-
-            ,bstNumbers = new EfficiencyNumbers()
-
-            ,cocktailNumbers = new EfficiencyNumbers()
-
-            ,shellNumbers = new EfficiencyNumbers()
-
-            ,binaryInsertionNumbers = new EfficiencyNumbers();
-
-    public static void main(String[] args) {
-
-        for (int len = 1000; len < 500_000;len*=5) {
-
-            for (int i = 0; i < NUM_ITERATIONS; i++) {
-
-                //bubble sort
-
-                bubbleSort(getUnsortedArray(len), bubbleNumbers);
-
-
-
-                // System.out.println(String.format("Num swaps for %s: %s, num comparisons %s, total time in nanoseconds %s", "bubbleSort", nums.swaps, nums.comparisons, totalTime));
-
-                selectionSort(getUnsortedArray(len), selectionNumbers);
-
-
-
-                binaryInsertionSort(getUnsortedArray(len), binaryInsertionNumbers);
-
-                cocktailSort(getUnsortedArray(len), cocktailNumbers);
-
-                //System.out.println(String.format("Num swaps for %s: %s, num comparisons %s, total time in nanoseconds %s", "Selection Sort", nums.swaps, nums.comparisons, totalTime));
-
-
-
-
-
-                shellSort(getUnsortedArray(len), shellNumbers);
-
-                MergeSort ms = new MergeSort(mergeNumbers);
-
-                ms.sort(getUnsortedArray(len), 0, len - 1);
-
-
-
-                // System.out.println(String.format("Num comparisons for %s: %s, num copies %s, total time in nanoseconds %s", "Merge Sort", nums.comparisons, nums.copyOps, totalTime));
-
-
-
-
-
-                QuickSort qs = new QuickSort(quickNumbers);
-
-                qs.sort(getUnsortedArray(len), 0, len - 1);
-
-
-
-                //  System.out.println(String.format("Num comparisons for %s: %s, num swaps %s, total time in nanoseconds %s", "Quick Sort", nums.comparisons, nums.swaps, totalTime));
-
-
-
-
-
-                insertionSort(getUnsortedArray(len), insertionNumbers);
-
-
-
-                //   System.out.println(String.format("Num copyOperations for %s: %s, num comparisons %s, total time in nanoseconds %s", "insertion Sort", nums.copyOps, nums.comparisons, totalTime));
-
-
-
-
-
-                HeapSort hs = new HeapSort(heapNumbers);
-
-                hs.sort(getUnsortedArray(len));
-
-
-
-                BST bst = new BST(bstNumbers);
-
-                bst.treeins(getUnsortedArray(len));
-
-                bst.inorderRec(bst.root);
-
-
-
-                // System.out.println(String.format("Num comparisons for %s: %s, num copies %s, num swaps : %s total time in nanoseconds %s", "heap Sort", nums.comparisons, nums.copyOps, nums.swaps, totalTime));
-
-
-
-            }
-
-            printResults(len);
-
-        }
-
-    }
-
-
-
-    private static void printResults(int len) {
-
-        averageOut(bubbleNumbers);
-
-        averageOut(selectionNumbers);
-
-        averageOut(mergeNumbers);
-
-        averageOut(quickNumbers);
-
-        averageOut(insertionNumbers);
-
-        averageOut(heapNumbers);
-
-        averageOut(bstNumbers);
-
-        averageOut(cocktailNumbers);
-
-        averageOut(shellNumbers);
-
-        averageOut(binaryInsertionNumbers);
-
-
-
-        System.out.printf("\n\n\nResults for length %d:",len);
-
-        printOut("bubbleSort",bubbleNumbers);
-
-        printOut("Selection sort", selectionNumbers);
-
-        printOut("Merge Sort", mergeNumbers);
-
-        printOut("QuickSort", quickNumbers);
-
-        printOut("insertion sort",insertionNumbers);
-
-        printOut("Heap sort",heapNumbers);
-
-        printOut("BST sort",bstNumbers);
-
-        printOut("cocktail sort",cocktailNumbers);
-
-        printOut("Shell sort",shellNumbers);
-
-        printOut("Binary Insertion",binaryInsertionNumbers);
-
-
-
-        reset(bubbleNumbers);
-
-        reset(selectionNumbers);
-
-        reset(mergeNumbers);
-
-        reset(quickNumbers);
-
-        reset(insertionNumbers);
-
-        reset(heapNumbers);
-
-        reset(bstNumbers);
-
-        reset(cocktailNumbers);
-
-        reset(shellNumbers);
-
-        reset(binaryInsertionNumbers);
-
-    }
+    static EfficiencyNumbers[] bubbleNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+    static EfficiencyNumbers[] selectionNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+    static EfficiencyNumbers[] mergeNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+    static EfficiencyNumbers[] quickNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+    static EfficiencyNumbers[] insertionNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+    static EfficiencyNumbers[] heapNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+    static EfficiencyNumbers[] binaryInsertionNumbers = new EfficiencyNumbers[NUM_ITERATIONS];
+
+
+
+
+//    public static void main(String[] args) {
+//
+//        for (int len = 10; len < 10_001;len*=10) {
+//
+//            System.out.println("Length of " + len);
+//            for (int i = 0; i < NUM_ITERATIONS; i++) {
+//
+//                System.out.println("____ iteration " + (i+1));
+//                bubbleNumbers[i] = new EfficiencyNumbers();
+//                bubbleSort(getUnsortedArray(len), bubbleNumbers[i]);
+//                printOut("bubblesort ",bubbleNumbers[i]);
+//
+//                // System.out.println(String.format("Num swaps for %s: %s, num comparisons %s, total time in nanoseconds %s", "bubbleSort", nums.swaps, nums.comparisons, totalTime));
+//
+//                selectionNumbers[i] = new EfficiencyNumbers();
+//                selectionSort(getUnsortedArray(len), selectionNumbers[i]);
+//                printOut("selectionSort ",bubbleNumbers[i]);
+//
+//                binaryInsertionNumbers[i] = new EfficiencyNumbers();
+//                binaryInsertionSort(getUnsortedArray(len), binaryInsertionNumbers[i]);
+//                printOut("",binaryInsertionNumbers[i]);
+//               // cocktailSort(getUnsortedArray(len), cocktailNumbers);
+//
+//                //System.out.println(String.format("Num swaps for %s: %s, num comparisons %s, total time in nanoseconds %s", "Selection Sort", nums.swaps, nums.comparisons, totalTime));
+//
+//
+//
+//
+//
+//               // shellSort(getUnsortedArray(len), shellNumbers);
+//                mergeNumbers[i] = new EfficiencyNumbers();
+//                MergeSort ms = new MergeSort(mergeNumbers[i]);
+//                ms.sort(getUnsortedArray(len), 0, len - 1);
+//                printOut("merge sort",mergeNumbers[i]);
+//
+//
+//
+//                // System.out.println(String.format("Num comparisons for %s: %s, num copies %s, total time in nanoseconds %s", "Merge Sort", nums.comparisons, nums.copyOps, totalTime));
+//
+//
+//
+//
+//                quickNumbers[i] = new EfficiencyNumbers();
+//                QuickSort qs = new QuickSort(quickNumbers[i]);
+//                qs.sort(getUnsortedArray(len), 0, len - 1);
+//                printOut("Quicksort ",quickNumbers[i]);
+//
+//                //  System.out.println(String.format("Num comparisons for %s: %s, num swaps %s, total time in nanoseconds %s", "Quick Sort", nums.comparisons, nums.swaps, totalTime));
+//
+//                insertionNumbers[i] = new EfficiencyNumbers();
+//                insertionSort(getUnsortedArray(len), insertionNumbers[i]);
+//                printOut("insertion sort",insertionNumbers[i]);
+//
+//
+//
+//                //   System.out.println(String.format("Num copyOperations for %s: %s, num comparisons %s, total time in nanoseconds %s", "insertion Sort", nums.copyOps, nums.comparisons, totalTime));
+//
+//
+//
+//                heapNumbers[i] = new EfficiencyNumbers();
+//                HeapSort hs = new HeapSort(heapNumbers[i]);
+//                hs.sort(getUnsortedArray(len));
+//                printOut("heap sort", heapNumbers[i]);
+//
+//
+//               // BST bst = new BST(bstNumbers);
+//
+//               // bst.treeins(getUnsortedArray(len));
+//
+//              //  bst.inorderRec(bst.root);
+//
+//
+//
+//                // System.out.println(String.format("Num comparisons for %s: %s, num copies %s, num swaps : %s total time in nanoseconds %s", "heap Sort", nums.comparisons, nums.copyOps, nums.swaps, totalTime));
+//
+//
+//
+//            }
+//
+//          //  printResults(len);
+//
+//        }
+//
+//    }
+
+
+
+//    private static void printResults(int len) {
+//
+//        averageOut(bubbleNumbers);
+//
+//        averageOut(selectionNumbers);
+//
+//        averageOut(mergeNumbers);
+//
+//        averageOut(quickNumbers);
+//
+//        averageOut(insertionNumbers);
+//
+//        averageOut(heapNumbers);
+//
+//       // averageOut(bstNumbers);
+//
+//      //  averageOut(cocktailNumbers);
+//
+//     //   averageOut(shellNumbers);
+//
+//        averageOut(binaryInsertionNumbers);
+//
+//
+//
+//        System.out.printf("\n\n\nResults for length %d:",len);
+//
+//        printOut("bubbleSort",bubbleNumbers);
+//
+//        printOut("Selection sort", selectionNumbers);
+//
+//        printOut("Merge Sort", mergeNumbers);
+//
+//        printOut("QuickSort", quickNumbers);
+//
+//        printOut("insertion sort",insertionNumbers);
+//
+//        printOut("Heap sort",heapNumbers);
+//
+//       // printOut("BST sort",bstNumbers);
+//
+//        //printOut("cocktail sort",cocktailNumbers);
+//
+//        //printOut("Shell sort",shellNumbers);
+//
+//        printOut("Binary Insertion",binaryInsertionNumbers);
+//
+//
+//
+//        reset(bubbleNumbers);
+//
+//        reset(selectionNumbers);
+//
+//        reset(mergeNumbers);
+//
+//        reset(quickNumbers);
+//
+//        reset(insertionNumbers);
+//
+//        reset(heapNumbers);
+//
+//      //  reset(bstNumbers);
+//
+//        //reset(cocktailNumbers);
+//
+//        //reset(shellNumbers);
+//
+//        reset(binaryInsertionNumbers);
+//
+//    }
 
 
 
@@ -218,7 +204,7 @@ public class Main {
 
     {
 
-        System.out.printf("\nName: %s, Copies: %d, Swaps: %d, Comparisons %d\n",name,nums.copyOps,nums.swaps,nums.comparisons);
+        System.out.printf("%d\n",nums.comparisons);
 
     }
 
@@ -606,7 +592,7 @@ public class Main {
 
     }
 
-    private static int[] getUnsortedArray(int lengthOfArray) {
+    public static int[] getUnsortedArray(int lengthOfArray) {
 
         Random random = new Random();
 
